@@ -1,12 +1,20 @@
 package com.example.project5
 
+import android.media.SoundPool
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var view : GameView;
+    private lateinit var timer : Timer;
+    private lateinit var task : GameTimerTask;
+    private lateinit var soundPool : SoundPool;
+    private var hitNoise = 0;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -16,5 +24,17 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        soundPool = SoundPool.Builder().build();
+        //put sound
+
+        val model = BrickBreaker(this, soundPool, hitNoise);
+        view = GameView(this, model);
+        setContentView(view);
+
+        timer = Timer();
+        task = GameTimerTask(model, view);
+        timer.schedule(task, 0, 16);
     }
+
+
 }
