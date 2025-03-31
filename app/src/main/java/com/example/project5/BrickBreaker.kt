@@ -26,7 +26,7 @@ class BrickBreaker(private val context: Context,
     var paddleX = (widthOfScreen / 2) - (paddleWidth / 2);
     var paddleY = heightOfScreen - 150f;
 
-    var ballRadius = 20f ;
+    var ballRadius = 25f ;
     var ballX = widthOfScreen / 2;
     var ballY = heightOfScreen / 2;
 
@@ -62,6 +62,9 @@ class BrickBreaker(private val context: Context,
     }
 
     fun updateBallPos() {
+
+
+
         if(!gameStarted || gameOver) {
             return;
         }
@@ -78,6 +81,20 @@ class BrickBreaker(private val context: Context,
         ballX += ballSpeedX;
         ballY += ballSpeedY;
 
+        val bottomOfBall = ballY + ballRadius;
+
+        val leftOfBall = ballX - ballRadius ;
+
+        val rightOfBall = ballX + ballRadius ;
+
+        val leftOfPaddle = paddleX;
+
+        val rightOfPaddle = paddleX + paddleWidth ;
+
+        val topOfPaddle = paddleY;
+
+        val bottomOfPaddle = paddleY + paddleHeight ;
+
         if(ballX - ballRadius < 0 || ballX + ballRadius > widthOfScreen) {
             ballSpeedX *= -1;
         }
@@ -86,11 +103,15 @@ class BrickBreaker(private val context: Context,
             ballSpeedY *= -1;
         }
 
-        if(ballY + ballRadius >= paddleY && ballY + ballRadius <= paddleY + paddleHeight
-            && ballX in paddleX..(paddleX +paddleWidth)) {
 
+
+        if (bottomOfBall >= topOfPaddle && ballY <= bottomOfPaddle &&
+            rightOfBall >= leftOfPaddle && leftOfBall <= rightOfPaddle) {
+            //had to add this because the ball was phasing through the paddle
             ballSpeedY *= -1;
-            //make sound here too
+            ballY = paddleY - ballRadius;
+
+            //add the sound here
         }
 
         //ends the game once you get pass the paddle at the bottom of
@@ -108,14 +129,14 @@ class BrickBreaker(private val context: Context,
 
         if (row in 0 until numOfRows && col in 0 until numofCols
             && bricks[row][col]) {
-            bricks[row][col] = false
+            bricks[row][col] = false;
             score ++;
             ballSpeedY *= -1;
         }
     }
 
     fun bricksLeft() : Int {
-        return bricks.sumOf { row -> row.count {it} }
+        return bricks.sumOf { row -> row.count {it} };
     }
 
 }
