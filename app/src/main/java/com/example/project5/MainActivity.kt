@@ -1,10 +1,7 @@
 package com.example.project5
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.media.SoundPool
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,45 +9,32 @@ import androidx.core.view.WindowInsetsCompat
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
-    //needs to be global
-    private lateinit var gameView: GameView
+    private lateinit var view : GameView;
+    private lateinit var timer : Timer;
+    private lateinit var task : GameTimerTask;
+    private lateinit var soundPool : SoundPool;
+    private var hitNoise = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //we need some other way to set content view
+        setContentView(R.layout.activity_main)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        soundPool = SoundPool.Builder().build();
+        //put sound
 
+        val model = BrickBreaker(this, soundPool, hitNoise);
+        view = GameView(this, model);
+        setContentView(view);
+
+        timer = Timer();
+        task = GameTimerTask(model, view);
+        timer.schedule(task, 0, 16);
     }
 
-    fun updateModel( ) {
-        // move duck
-        gameView
-    }
 
-    fun updateView( ) {
-        gameView.postInvalidate()
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        buildViewByCode( )
-    }
-
-    fun buildViewByCode( ) {
-        var width : Int = resources.displayMetrics.widthPixels
-        var height : Int = resources.displayMetrics.heightPixels
-        var rectangle : Rect = Rect( 0, 0, 0, 0 )
-        window.decorView.getWindowVisibleDisplayFrame( rectangle )
-        Log.w( "MainActivity", "width = " + width )
-        Log.w( "MainActivity", "height = " + height )
-        Log.w( "MainActivity", "status bar height = " + rectangle.top )
-        var statusBarHeight : Int = rectangle.top
-
-        gameView = GameView(this, width, height - statusBarHeight)
-        setContentView( gameView )
-
-        var timer : Timer = Timer( )
-       // var task : GameTimerTask = GameTimerTask( this )
-       // timer.schedule( task, 0, 100 )
-    }
 }
