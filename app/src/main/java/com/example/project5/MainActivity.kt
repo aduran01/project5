@@ -8,6 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import java.util.Timer
 
+/**
+ * Project 5 CMSC 436: Aldrin Duran and Marvin Alfaro-Orellana
+ */
 class MainActivity : AppCompatActivity() {
     private lateinit var view : GameView;
     private lateinit var timer : Timer;
