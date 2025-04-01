@@ -111,7 +111,10 @@ class BrickBreaker(private val context: Context,
             ballSpeedY *= -1;
             ballY = paddleY - ballRadius;
 
-            //add the sound here
+            //change the pitch everytime play is called, just so
+            //the sound doesn't get repetitive
+            val randomPitch = (0.8 + Math.random() * 0.4).toFloat()
+            soundPool.play(hitNoise, 2f, 2f, 1, 0, randomPitch)
         }
 
         //ends the game once you get pass the paddle at the bottom of

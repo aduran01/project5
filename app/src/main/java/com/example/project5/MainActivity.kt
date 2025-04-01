@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         soundPool = SoundPool.Builder().build();
-        //put sound
+        hitNoise = soundPool.load(this, R.raw.hit, 1)
+
 
         val model = BrickBreaker(this, soundPool, hitNoise);
         view = GameView(this, model);
